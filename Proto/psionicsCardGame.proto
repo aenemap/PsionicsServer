@@ -1,0 +1,141 @@
+﻿syntax = "proto3";
+
+package PsionicsCardGameProto;
+//option csharp_namespace = "PsionicsCardGameNamespace";
+
+message Welcome {
+    int32 id = 1;
+    string message = 2;
+}
+
+message WelcomeReceived {
+    int32 id = 1;
+    string clientName = 2;
+    string username = 3;
+}
+
+message UdpWelcome {
+    int32 clientId = 1;
+}
+
+message PlayerPosition {
+    int32 clientId = 1;
+    float X = 2;
+    float Y = 3;
+    float Z = 4;
+}
+
+message PlayerRotation {
+    int32 clientId = 1;
+    float X = 2;
+    float Y = 3;
+    float Z = 4;
+    float W = 5;
+}
+
+message PlayerMovement {
+    int32 clientId = 1;
+    PlayerRotation playerRotation = 2;
+    repeated bool inputs = 3;
+}
+
+message ServerPlayer {
+    int32 id = 1;
+    string username = 2;
+    PlayerPosition playerPosition = 3;
+    PlayerRotation playerRotation = 4;
+}
+
+message LobbyPlayer {
+    int32 id = 1;
+    string username = 2;
+}
+
+message ChangeScene {
+    int32 clientId = 1;
+    string sceneName = 2;
+}
+
+message PlayerToLobby {
+    int32 clientId = 1;
+    string sceneName = 2;
+    LobbyPlayer player = 3;
+    repeated GameMessage activeGames = 4;
+}
+
+message ChatMessage {
+    int32 clientId = 1;
+    string username = 2;
+    string message = 3;
+}
+
+message GameMessage {
+    string gameId = 1;
+    string gameName = 2;
+    int32 createdById = 3;
+    string createdByUsername = 4;
+    string gameStatus = 5;
+}
+
+message CreateGame {
+    string gameName = 1;
+    int32 createdById = 2;
+    string createdByUsername = 3;
+}
+
+message GameCreated {
+    string gameId = 1;
+    repeated GameMessage activeGames = 2;
+}
+
+message JoinGame {
+    string gameId = 1;
+    int32 clientId = 2;
+}
+
+message PlayersInGame {
+    int32 playerId = 1;
+    string playerName = 2;
+    bool isGameCreator = 3;
+}
+
+message GameIsReadyToStart{
+    string gameName = 1;
+    repeated PlayersInGame playersInGame = 2;
+}
+
+message UpdateActiveGames{
+    repeated GameMessage activeGames = 1;
+}
+
+message SendIntoGame{
+    string gameId = 1;
+}
+
+message ServerResponse {
+    oneof result {
+        Welcome welcome = 1;
+        ServerPlayer player = 2;
+        PlayerPosition playerPosition = 3;
+        PlayerRotation playerRotation = 4;
+        ChangeScene changeScene = 5;
+        PlayerToLobby playerToLobby = 6;
+        ChatMessage chatMessage = 7;
+        GameCreated gameCreated = 8;
+        GameIsReadyToStart gameIsReadyToStart = 9;
+        UpdateActiveGames updateActiveGames = 10;
+    }
+}
+
+message ClientRequest {
+    oneof request {
+        WelcomeReceived welcomeReceived = 1;
+        UdpWelcome udpWelcome = 2;
+        PlayerMovement playerMovement = 3;
+        ChangeScene changeScene = 4;
+        ChatMessage chatMessage = 5;
+        CreateGame createGame = 6;
+        JoinGame joinGame = 7;
+        SendIntoGame sendIntoGame = 8;
+    }
+}
